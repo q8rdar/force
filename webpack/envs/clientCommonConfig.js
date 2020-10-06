@@ -138,17 +138,56 @@ export const clientCommonConfig = {
   },
   optimization: {
     // Extract webpack runtime code into it's own file
-    runtimeChunk: {
-      name: "runtime-manifest",
-    },
+    runtimeChunk: "single",
     splitChunks: {
+      maxInitialRequests: Infinity,
+      // chunks: "all",
       cacheGroups: {
         // Separate vendor libraries from `node_modules` into a `commons.js`
+        artsy: {
+          test: /.*node_modules[\\/](@artsy)[\\/]/,
+          name: "artsy",
+          chunks: "all",
+          minSize: 0,
+          minChunks: 1,
+          reuseExistingChunk: true,
+          enforce: true,
+        },
+        "common-jquery": {
+          test: /.*node_modules[\\/](jquery|jquery-ui)[\\/]/,
+          name: "common-jquery",
+          chunks: "all",
+          minSize: 0,
+          minChunks: 1,
+          reuseExistingChunk: true,
+          enforce: true,
+        },
+        "common-react": {
+          test: /.*node_modules[\\/](react|react-dom)[\\/]/,
+          name: "common-react",
+          chunks: "all",
+          minSize: 0,
+          minChunks: 1,
+          reuseExistingChunk: true,
+          enforce: true,
+        },
+        "common-utility": {
+          test: /.*node_modules[\\/](lodash|moment|moment-timezone)[\\/]/,
+          name: "common-utility",
+          chunks: "all",
+          minSize: 0,
+          minChunks: 1,
+          reuseExistingChunk: true,
+          enforce: true,
+        },
         commons: {
-          test: /[\\/]node_modules[\\/]/,
+          test: /.*node_modules[\\/](?!(@artsy[\\/]|react[\\/]|react-dom[\\/]|lodash[\\/]|moment[\\/]|moment-timezone[\\/]|jquery[\\/]|jquery-ui[\\/]))/,
           name: "common",
-          minChunks: 10,
-          chunks: "initial",
+          chunks: "all",
+          minSize: 0,
+          minChunks: 1,
+          reuseExistingChunk: true,
+          enforce: true,
         },
       },
     },
